@@ -4,12 +4,18 @@
  */
 
 #include <malloc.h>
-#include <errno.h>
 #include "cstl_queue.h"
+
+struct cstl_queue {
+    cstl_dup_func dup;
+    cstl_free_func free;
+    size_t num;
+    cstl_node_t head;
+    cstl_node_t tail;
+};
 
 cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free) {
     if (dup == NULL || free == NULL) {
-        errno = EINVAL;
         return NULL;
     }
     cstl_queue_t *queue = (cstl_queue_t *) malloc(sizeof(cstl_queue_t));
@@ -27,7 +33,7 @@ cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free) {
 }
 
 int32_t cstl_queue_enqueue(cstl_queue_t *queue, void *data) {
-    if ((queue == NULL) || (queue->num == UINT32_MAX)) {
+    if ((queue == NULL) || (queue->num == SIZE_MAX)) {
         return CSTL_ERROR;
     }
     cstl_node_t *node = malloc(sizeof(cstl_node_t));
@@ -78,4 +84,9 @@ void cstl_queue_destroy(cstl_queue_t *queue) {
         node = next;
     }
     free(queue);
+}
+
+size_t cstl_queue_get_num(cstl_queue_t *queue) {
+    CSTL_RET_IF_NULL_OR_EMPTY(queue, 0)
+    return queue->num;
 }

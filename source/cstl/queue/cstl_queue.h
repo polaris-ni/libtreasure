@@ -12,13 +12,7 @@
 extern "C"{
 #endif
 
-typedef struct cstl_queue {
-    cstl_dup_func dup;
-    cstl_free_func free;
-    uint32_t num;
-    cstl_node_t head;
-    cstl_node_t tail;
-} cstl_queue_t;
+typedef struct cstl_queue cstl_queue_t;
 
 cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free);
 
@@ -29,6 +23,8 @@ void *cstl_queue_dequeue(cstl_queue_t *queue);
 void *cstl_queue_peek(cstl_queue_t *queue);
 
 void cstl_queue_destroy(cstl_queue_t *queue);
+
+size_t cstl_queue_get_num(cstl_queue_t *queue);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }
