@@ -54,6 +54,9 @@ void *cstl_queue_dequeue(cstl_queue_t *queue) {
     void *data = node->data;
     free(node);
     queue->num--;
+    if (queue->num == 0) {
+        queue->tail.next = &queue->head;
+    }
     return data;
 }
 

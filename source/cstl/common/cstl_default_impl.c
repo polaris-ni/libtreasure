@@ -38,7 +38,7 @@ void *cstl_8byte_dup(void *data) {
 /* for string dup */
 void *cstl_string_dup(void *data) {
     CSTL_RET_IF_NULL(data, NULL)
-    return cstl_common_dup(strlen(data), data);
+    return cstl_common_dup(strlen(data) + 1, data);
 }
 
 /* just call free */

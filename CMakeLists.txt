@@ -3,4 +3,7 @@ project(libtreasure C)
 
 set(CMAKE_C_STANDARD 99)
 
+set(TREASURE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_subdirectory(source)
+add_subdirectory(test)

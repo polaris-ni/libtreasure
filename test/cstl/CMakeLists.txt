@@ -1,0 +1,6 @@
+message("${TREASURE_SOURCE_DIR}")
+include_directories(${TREASURE_SOURCE_DIR}/source/cstl/common)
+include_directories(${TREASURE_SOURCE_DIR}/source/cstl/queue)
+aux_source_directory(. SRC_TEST_CSTL)
+add_executable(test-cstl ${SRC_TEST_CSTL})
+target_link_libraries(test-cstl cstl)
