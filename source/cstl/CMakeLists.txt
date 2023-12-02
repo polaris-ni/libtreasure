@@ -1,0 +1,5 @@
+include_directories(common)
+include_directories(queue)
+aux_source_directory(common SRC_CSTL_COMMON)
+aux_source_directory(queue SRC_CSTL_QUEUE)
+add_library(cstl SHARED ${SRC_CSTL_COMMON} ${SRC_CSTL_QUEUE})
