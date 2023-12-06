@@ -24,10 +24,8 @@ typedef void (*cstl_free_func)(void *);
 typedef struct cstl_node cstl_node_t;
 struct cstl_node {
     void *data;
-    union {
-        cstl_node_t *next;
-        cstl_node_t *pre;
-    };
+    cstl_node_t *prev;
+    cstl_node_t *next;
 };
 
 #define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret) \
@@ -39,6 +37,8 @@ struct cstl_node {
     if (ptr == NULL) {              \
         return ret;                 \
     }
+
+#define CSTL_RET_NULL_IF_NULL(ptr) CSTL_RET_IF_NULL(ptr, NULL)
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

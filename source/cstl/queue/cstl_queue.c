@@ -3,16 +3,19 @@
  * @description cstl_queue.c created on 2023-12-02
  */
 
+/**
+ * 1. queue is empty
+ *      head.next  <--  tail.next
+ *          |
+ *        NULL
+ * 2. queue is not empty
+ *      head.next            tail.next
+ *          |                    |
+ *        Node  -->  Node  ->  Node--> NULL
+ */
+
 #include <malloc.h>
 #include "cstl_queue.h"
-
-struct cstl_queue {
-    cstl_dup_func dup;
-    cstl_free_func free;
-    size_t num;
-    cstl_node_t head;
-    cstl_node_t tail;
-};
 
 cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free) {
     if (dup == NULL || free == NULL) {

@@ -12,7 +12,13 @@
 extern "C"{
 #endif
 
-typedef struct cstl_queue cstl_queue_t;
+typedef struct cstl_queue {
+    size_t num;
+    cstl_dup_func dup;
+    cstl_free_func free;
+    cstl_node_t head;
+    cstl_node_t tail;
+} cstl_queue_t;
 
 cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free);
 
