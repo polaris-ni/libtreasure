@@ -28,9 +28,9 @@ struct cstl_node {
     cstl_node_t *next;
 };
 
-#define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret) \
-    if (ptr == NULL || ptr->num == 0) {     \
-        return ret;                         \
+#define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret)     \
+    if (ptr == NULL || ptr->num == 0) {         \
+        return ret;                             \
     }
 
 #define CSTL_RET_IF_NULL(ptr, ret)  \

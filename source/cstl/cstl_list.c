@@ -97,15 +97,29 @@ void *cstl_list_pop_tail(cstl_list_t *list) {
     return data;
 }
 
+void *cstl_list_peek_head(const cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+    return list->head->data;
+}
+
+void *cstl_list_peek_tail(const cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+    return list->tail->data;
+}
+
+size_t cstl_list_get_num(const cstl_list_t *list) {
+    return list == NULL ? 0 : list->num;
+}
+
 void cstl_list_destroy(cstl_list_t *list) {
     CSTL_RET_IF_NULL(list,)
     cstl_node_t *node = list->head;
-    cstl_node_t *next = node->next;
+    cstl_node_t *next = NULL;
     while (node != NULL) {
+        next = node->next;
         list->free(node->data);
         free(node);
         node = next;
-        next = next->next;
     }
     free(list);
 }

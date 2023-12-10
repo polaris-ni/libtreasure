@@ -31,6 +31,12 @@ void *cstl_list_pop_head(cstl_list_t *list);
 
 void *cstl_list_pop_tail(cstl_list_t *list);
 
+void *cstl_list_peek_head(const cstl_list_t *list);
+
+void *cstl_list_peek_tail(const cstl_list_t *list);
+
+size_t cstl_list_get_num(const cstl_list_t *list);
+
 void cstl_list_destroy(cstl_list_t *list);
 
 #if defined(__cplusplus) || defined(c_plusplus)
