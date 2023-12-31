@@ -23,6 +23,11 @@ typedef void *(*cstl_dup_func)(void *);
 
 typedef void (*cstl_free_func)(void *);
 
+typedef struct cstl_dup_free {
+    cstl_dup_func dup;
+    cstl_free_func free;
+} cstl_func_pair;
+
 typedef struct cstl_node cstl_node_t;
 struct cstl_node {
     void *data;

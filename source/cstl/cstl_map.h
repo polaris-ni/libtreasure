@@ -16,33 +16,13 @@ extern "C"{
 
 typedef struct cstl_entry cstl_entry_t;
 
-struct cstl_entry {
-    void *key;
-    void *value;
-    cstl_entry_t *next;
-};
+typedef struct cstl_map cstl_map_t;
 
 typedef uint64_t (*cstl_hash_func)(const void *key);
 
 typedef size_t (*cstl_size_func)(const void *data);
 
 typedef bool (*cstl_key_equal_func)(const void *key1, const void *key2);
-
-typedef struct cstl_dup_free {
-    cstl_dup_func dup;
-    cstl_free_func free;
-} cstl_func_pair;
-
-typedef struct cstl_map {
-    size_t capacity;
-    size_t num;
-    cstl_entry_t *entries;
-    cstl_size_func key_size;
-    cstl_hash_func hash;
-    cstl_key_equal_func equals;
-    cstl_func_pair key_func;
-    cstl_func_pair value_func;
-} cstl_map_t;
 
 cstl_map_t *cstl_hashmap_create(cstl_hash_func hash,
                                 cstl_key_equal_func equals,

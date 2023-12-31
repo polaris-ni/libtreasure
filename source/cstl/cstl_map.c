@@ -10,6 +10,27 @@
 #define CSTL_HASHMAP_MAX_CAPACITY 256
 #endif
 
+#ifndef CSTL_HASHMAP_RESIZE_THRESHOLD
+#define CSTL_HASHMAP_RESIZE_THRESHOLD 0.75
+#endif
+
+struct cstl_entry {
+    void *key;
+    void *value;
+    cstl_entry_t *next;
+};
+
+struct cstl_map {
+    size_t capacity;
+    size_t num;
+    cstl_entry_t *entries;
+    cstl_size_func key_size;
+    cstl_hash_func hash;
+    cstl_key_equal_func equals;
+    cstl_func_pair key_func;
+    cstl_func_pair value_func;
+};
+
 cstl_map_t *cstl_hashmap_create(cstl_hash_func hash,
                                 cstl_key_equal_func equals,
                                 cstl_size_func key_size,

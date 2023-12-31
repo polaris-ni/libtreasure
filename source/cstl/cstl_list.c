@@ -7,6 +7,14 @@
 #include <stddef.h>
 #include <malloc.h>
 
+struct cstl_list {
+    size_t num;
+    cstl_dup_func dup;
+    cstl_free_func free;
+    cstl_node_t *head;
+    cstl_node_t *tail;
+};
+
 cstl_list_t *cstl_list_create(cstl_dup_func dup, cstl_free_func free) {
     CSTL_RET_NULL_IF_NULL(dup)
     CSTL_RET_NULL_IF_NULL(free)

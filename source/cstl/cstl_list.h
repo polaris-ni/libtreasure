@@ -13,13 +13,7 @@
 extern "C"{
 #endif
 
-typedef struct cstl_list {
-    size_t num;
-    cstl_dup_func dup;
-    cstl_free_func free;
-    cstl_node_t *head;
-    cstl_node_t *tail;
-} cstl_list_t;
+typedef struct cstl_list cstl_list_t;
 
 cstl_list_t *cstl_list_create(cstl_dup_func dup, cstl_free_func free);
 
