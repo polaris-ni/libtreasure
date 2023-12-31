@@ -23,6 +23,7 @@ struct cstl_entry {
 struct cstl_map {
     size_t capacity;
     size_t num;
+    double threshold;
     cstl_entry_t *entries;
     cstl_size_func key_size;
     cstl_hash_func hash;
@@ -39,6 +40,7 @@ cstl_map_t *cstl_hashmap_create(cstl_hash_func hash,
     cstl_map_t *map = (cstl_map_t *) malloc(sizeof(cstl_map_t));
     CSTL_RET_NULL_IF_NULL(map)
     map->capacity = 16;
+    map->threshold = CSTL_HASHMAP_RESIZE_THRESHOLD;
     map->entries = malloc(sizeof(cstl_entry_t) * map->capacity);
     if (map->entries == NULL) {
         free(map);
@@ -54,8 +56,13 @@ cstl_map_t *cstl_hashmap_create(cstl_hash_func hash,
     return map;
 }
 
+void cstl_hashmap_set_resize_threshold(cstl_map_t *map, double threshold) {
+    CSTL_RET_IF_NULL(map,)
+    map->threshold = threshold;
+}
+
 static cstl_entry_t *find_entry_by_key(cstl_map_t *map, bool create, const void *key) {
-    uint64_t index = map->hash(key) % map->capacity;
+    uint64_t index = map->hash(key, map->key_size(key)) % map->capacity;
     if (map->entries[index].key == NULL) {
         return &map->entries[index];
     }
@@ -80,16 +87,76 @@ static cstl_entry_t *find_entry_by_key(cstl_map_t *map, bool create, const void 
     return tmp;
 }
 
+static void resize(cstl_map_t *map) {
+    if ((double) map->num <= CSTL_HASHMAP_RESIZE_THRESHOLD * (double) map->capacity) {
+        return; /* no need to resize */
+    }
+
+    size_t old_capacity = map->capacity;
+    cstl_entry_t *old_entries = map->entries;
+    size_t new_capacity = map->capacity * 3 / 2; /* equals to "* 1.5" */
+    if (new_capacity > CSTL_HASHMAP_MAX_CAPACITY) {
+        return; /* reach max capacity */
+    }
+
+    cstl_entry_t *new_entries = (cstl_entry_t *) malloc(sizeof(cstl_entry_t) * new_capacity);
+    CSTL_RET_IF_NULL(new_entries,)
+    map->capacity = new_capacity;
+    map->entries = new_entries;
+    bool ok = true;
+    for (size_t i = 0; i < old_capacity; ++i) {
+        cstl_entry_t *current = &old_entries[i];
+        while (current != NULL) {
+            cstl_entry_t *entry = find_entry_by_key(map, true, current->key);
+            if (entry == NULL) {
+                ok = false;
+                break;
+            }
+            entry->key = current->key;
+            entry->value = current->value;
+            current = current->next;
+        }
+        if (!ok) {
+            break;
+        }
+    }
+
+    /* restore */
+    if (!ok) {
+        map->entries = old_entries;
+        map->capacity = old_capacity;
+        return;
+    }
+
+    for (size_t i = 0; i < old_capacity; ++i) {
+        cstl_entry_t *current = &old_entries[i];
+        current->key = NULL;
+        current->value = NULL;
+        cstl_entry_t *next = current->next;
+        current = next;
+        /* clear conflict chain */
+        while (current != NULL) {
+            next = current->next;
+            current->key = NULL;
+            current->value = NULL;
+            free(current);
+            current = next;
+        }
+    }
+    free(old_entries);
+}
+
 int32_t cstl_hashmap_put(cstl_map_t *map, void *key, void *value) {
     CSTL_RET_IF_NULL(map, CSTL_BAD_PARAMS)
     CSTL_RET_IF_NULL(key, CSTL_BAD_PARAMS)
     CSTL_RET_IF_NULL(value, CSTL_BAD_PARAMS)
+    resize(map);
     void *tmp_key = map->key_func.dup(key);
-    CSTL_RET_IF_NULL(tmp_key, CSTL_ERROR)
+    CSTL_RET_IF_NULL(tmp_key, CSTL_MALLOC_ERROR)
     void *tmp_value = map->value_func.dup(value);
     if (tmp_value == NULL) {
         map->key_func.free(tmp_key);
-        return CSTL_ERROR;
+        return CSTL_MALLOC_ERROR;
     }
     cstl_entry_t *entry = find_entry_by_key(map, true, tmp_key);
     if (entry == NULL) {
@@ -99,6 +166,7 @@ int32_t cstl_hashmap_put(cstl_map_t *map, void *key, void *value) {
     }
     entry->key = tmp_key;
     entry->value = tmp_value;
+    map->num++;
     return CSTL_SUCCESS;
 }
 
@@ -113,7 +181,7 @@ void *cstl_hashmap_get(cstl_map_t *map, void *key) {
 int32_t cstl_hashmap_remove(cstl_map_t *map, void *key) {
     CSTL_RET_IF_NULL(map, CSTL_BAD_PARAMS)
     CSTL_RET_IF_NULL(key, CSTL_BAD_PARAMS)
-    uint64_t index = map->hash(key) % map->capacity;
+    uint64_t index = map->hash(key, map->key_size(key)) % map->capacity;
     cstl_entry_t *current = &map->entries[index];
     cstl_entry_t *last = NULL;
     while (current != NULL) {
@@ -124,6 +192,7 @@ int32_t cstl_hashmap_remove(cstl_map_t *map, void *key) {
         current = current->next;
     }
     CSTL_RET_IF_NULL(current, CSTL_ITEM_NOT_FOUND)
+    map->num--;
     map->key_func.free(current->key);
     map->value_func.free(current->value);
     if (last == NULL) {
@@ -143,24 +212,28 @@ int32_t cstl_hashmap_remove(cstl_map_t *map, void *key) {
     }
 }
 
-static void clear_entry(cstl_map_t *map, cstl_entry_t *entry) {
-    map->key_func.free(entry);
-    map->value_func.free(entry);
+static void clear_entry(cstl_free_func key_free, cstl_free_func value_free, cstl_entry_t *entry) {
+    if (entry->key != NULL) {
+        key_free(entry->key);
+    }
+    if (entry->value != NULL) {
+        value_free(entry->value);
+    }
     entry->key = NULL;
     entry->value = NULL;
 }
 
-static void delete_entry(cstl_map_t *map, cstl_entry_t *entry) {
-    clear_entry(map, entry);
+static void delete_entry(cstl_free_func key_free, cstl_free_func value_free, cstl_entry_t *entry) {
+    clear_entry(key_free, value_free, entry);
     free(entry);
 }
 
-static void delete_entry_recursively(cstl_map_t *map, cstl_entry_t *entry) {
+static void delete_entry_recursively(cstl_free_func key_free, cstl_free_func value_free, cstl_entry_t *entry) {
     cstl_entry_t *current = entry;
     cstl_entry_t *next = NULL;
     while (current != NULL) {
         next = current->next;
-        clear_entry(map, current);
+        clear_entry(key_free, value_free, current);
         current = next;
     }
 }
@@ -168,8 +241,8 @@ static void delete_entry_recursively(cstl_map_t *map, cstl_entry_t *entry) {
 void cstl_hashmap_destroy(cstl_map_t *map) {
     CSTL_RET_IF_NULL(map,)
     for (size_t i = 0; i < map->capacity; ++i) {
-        delete_entry_recursively(map, map->entries[i].next);
-        clear_entry(map, &map->entries[i]);
+        delete_entry_recursively(map->key_func.free, map->value_func.free, map->entries[i].next);
+        clear_entry(map->key_func.free, map->value_func.free, &map->entries[i]);
     }
     free(map->entries);
     free(map);

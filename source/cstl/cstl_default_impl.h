@@ -31,6 +31,9 @@ inline void *cstl_not_dup(__attribute_maybe_unused__ size_t size, void *data) { 
 
 inline void cstl_not_free(__attribute_maybe_unused__ void *data) {}
 
+/* murmurhash impl, as default hashmap hash func */
+uint64_t cstl_murmurhash(const void *data, size_t size);
+
 #if defined(__cplusplus) || defined(c_plusplus)
 }
 #endif

@@ -16,7 +16,8 @@ enum {
     CSTL_SUCCESS,
     CSTL_ERROR,
     CSTL_BAD_PARAMS,
-    CSTL_ITEM_NOT_FOUND
+    CSTL_ITEM_NOT_FOUND,
+    CSTL_MALLOC_ERROR
 };
 
 typedef void *(*cstl_dup_func)(void *);

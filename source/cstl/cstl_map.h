@@ -18,7 +18,7 @@ typedef struct cstl_entry cstl_entry_t;
 
 typedef struct cstl_map cstl_map_t;
 
-typedef uint64_t (*cstl_hash_func)(const void *key);
+typedef uint64_t (*cstl_hash_func)(const void *key, size_t size);
 
 typedef size_t (*cstl_size_func)(const void *data);
 
@@ -29,6 +29,8 @@ cstl_map_t *cstl_hashmap_create(cstl_hash_func hash,
                                 cstl_size_func key_size,
                                 cstl_func_pair key_func,
                                 cstl_func_pair value_func);
+
+void cstl_hashmap_set_resize_threshold(cstl_map_t *map, double threshold);
 
 int32_t cstl_hashmap_put(cstl_map_t *map, void *key, void *value);
 
