@@ -1,13 +1,13 @@
 /*
  * @author polaris
- * @description cstl_default_impl.c created on 2023-12-02 
+ * @description cstl_default_impl.c created on 2023-12-02
  */
 
 #include "cstl_default_impl.h"
 #include <malloc.h>
 #include <string.h>
 
-void *cstl_common_dup(size_t size, void *data) {
+void *cstl_common_dup(void *data, size_t size) {
     CSTL_RET_NULL_IF_NULL(data)
     void *tmp = malloc(size);
     CSTL_RET_NULL_IF_NULL(tmp)
@@ -18,13 +18,15 @@ void *cstl_common_dup(size_t size, void *data) {
 /* for string dup */
 void *cstl_string_dup(void *data) {
     CSTL_RET_NULL_IF_NULL(data)
-    return cstl_common_dup(strlen((void *) data) + 1, data);
+    return cstl_common_dup(data, strlen((void *) data) + 1);
 }
 
 /* just call free */
-void cstl_common_free(void *data) {
-    free((void *) data);
-}
+void cstl_common_free(void *data) { free((void *) data); }
+
+void *cstl_not_dup(void *data) { return data; }
+
+void cstl_not_free(CSTL_UNUSED void *data) {}
 
 #define CSTL_MURMURHASH_VC1 0xCC9E2D51
 #define CSTL_MURMURHASH_VC2 0x1B873593
@@ -72,7 +74,8 @@ uint64_t cstl_murmurhash(const void *data, size_t size) {
         c1 = tmp[i++];
         c2 = tmp[i++];
         c3 = tmp[i++];
-        v = (size_t) c0 | ((size_t) c1 << CSTL_MURMURHASH_SHIFT8) | ((size_t) c2 << CSTL_MURMURHASH_SHIFT16) |
+        v = (size_t) c0 | ((size_t) c1 << CSTL_MURMURHASH_SHIFT8) |
+            ((size_t) c2 << CSTL_MURMURHASH_SHIFT16) |
             ((size_t) c3 << CSTL_MURMURHASH_SHIFT24);
         v = murmurhash_mix_v(v);
         h = murmurhash_mix_h(h, v);

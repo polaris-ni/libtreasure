@@ -9,7 +9,7 @@
 #include <stdint.h>
 
 #if defined(__cplusplus) || defined(c_plusplus)
-extern "C"{
+extern "C" {
 #endif
 
 enum {
@@ -47,6 +47,8 @@ struct cstl_node {
     }
 
 #define CSTL_RET_NULL_IF_NULL(ptr) CSTL_RET_IF_NULL(ptr, NULL)
+
+#define CSTL_UNUSED __attribute__((unused))
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }
