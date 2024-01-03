@@ -50,6 +50,8 @@ struct cstl_node {
 
 #define CSTL_UNUSED __attribute__((unused))
 
+#define CSTL_GET_NAME(cstl_type, data_type, suf) cstl_##cstl_type##_##data_type##_##suf
+
 #if defined(__cplusplus) || defined(c_plusplus)
 }
 #endif
