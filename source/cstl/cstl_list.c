@@ -28,11 +28,10 @@ cstl_list_t *cstl_list_create(cstl_dup_func dup, cstl_free_func free) {
     return list;
 }
 
-static cstl_node_t *cstl_node_create(cstl_list_t *list, void *data) {
+static cstl_node_t *cstl_node_create(cstl_list_t *list, const cstl_data_t *data) {
     cstl_node_t *node = (cstl_node_t *) malloc(sizeof(cstl_node_t));
     CSTL_RET_NULL_IF_NULL(node);
-    node->data = list->dup(data);
-    if (node->data == NULL) {
+    if (!list->dup(data, &node->data)) {
         free(node);
         return NULL;
     }
@@ -41,9 +40,9 @@ static cstl_node_t *cstl_node_create(cstl_list_t *list, void *data) {
     return node;
 }
 
-int32_t cstl_list_add_head(cstl_list_t *list, void *data) {
+int32_t cstl_list_add_head(cstl_list_t *list, cstl_data_t data) {
     CSTL_RET_IF_NULL(list, CSTL_ERROR);
-    cstl_node_t *node = cstl_node_create(list, data);
+    cstl_node_t *node = cstl_node_create(list, &data);
     CSTL_RET_IF_NULL(node, CSTL_ERROR);
     if (list->num == 0) {
         list->head = node;
@@ -57,9 +56,9 @@ int32_t cstl_list_add_head(cstl_list_t *list, void *data) {
     return CSTL_SUCCESS;
 }
 
-int32_t cstl_list_add_tail(cstl_list_t *list, void *data) {
+int32_t cstl_list_add_tail(cstl_list_t *list, cstl_data_t data) {
     CSTL_RET_IF_NULL(list, CSTL_ERROR);
-    cstl_node_t *node = cstl_node_create(list, data);
+    cstl_node_t *node = cstl_node_create(list, &data);
     CSTL_RET_IF_NULL(node, CSTL_ERROR);
     if (list->num == 0) {
         list->head = node;
@@ -73,8 +72,8 @@ int32_t cstl_list_add_tail(cstl_list_t *list, void *data) {
     return CSTL_SUCCESS;
 }
 
-void *cstl_list_pop_head(cstl_list_t *list) {
-    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+cstl_data_t cstl_list_pop_head(cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
     cstl_node_t *node = list->head;
     list->num--;
     if (list->num == 0) {
@@ -84,13 +83,13 @@ void *cstl_list_pop_head(cstl_list_t *list) {
         list->head = list->head->next;
         list->head->prev = NULL;
     }
-    void *data = node->data;
+    cstl_data_t data = node->data;
     free(node);
     return data;
 }
 
-void *cstl_list_pop_tail(cstl_list_t *list) {
-    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+cstl_data_t cstl_list_pop_tail(cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
     cstl_node_t *node = list->tail;
     list->num--;
     if (list->num == 0) {
@@ -100,18 +99,18 @@ void *cstl_list_pop_tail(cstl_list_t *list) {
         list->tail = list->tail->prev;
         list->tail->next = NULL;
     }
-    void *data = node->data;
+    cstl_data_t data = node->data;
     free(node);
     return data;
 }
 
-void *cstl_list_peek_head(const cstl_list_t *list) {
-    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+cstl_data_t cstl_list_peek_head(const cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
     return list->head->data;
 }
 
-void *cstl_list_peek_tail(const cstl_list_t *list) {
-    CSTL_RET_IF_NULL_OR_EMPTY(list, NULL);
+cstl_data_t cstl_list_peek_tail(const cstl_list_t *list) {
+    CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
     return list->tail->data;
 }
 
@@ -125,7 +124,7 @@ void cstl_list_destroy(cstl_list_t *list) {
     cstl_node_t *next = NULL;
     while (node != NULL) {
         next = node->next;
-        list->free(node->data);
+        list->free(&node->data);
         free(node);
         node = next;
     }

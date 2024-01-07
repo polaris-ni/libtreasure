@@ -16,11 +16,11 @@ typedef cstl_list_t cstl_queue_t;
 
 cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free);
 
-int32_t cstl_queue_enqueue(cstl_queue_t *queue, void *data);
+int32_t cstl_queue_enqueue(cstl_queue_t *queue, cstl_data_t data);
 
-void *cstl_queue_dequeue(cstl_queue_t *queue);
+cstl_data_t cstl_queue_dequeue(cstl_queue_t *queue);
 
-void *cstl_queue_peek(const cstl_queue_t *queue);
+cstl_data_t cstl_queue_peek(const cstl_queue_t *queue);
 
 size_t cstl_queue_get_num(const cstl_queue_t *queue);
 
@@ -28,11 +28,11 @@ void cstl_queue_destroy(cstl_queue_t *queue);
 
 inline cstl_queue_t *cstl_queue_create(cstl_dup_func dup, cstl_free_func free) { return cstl_list_create(dup, free); }
 
-inline int32_t cstl_queue_enqueue(cstl_queue_t *queue, void *data) { return cstl_list_add_tail(queue, data); }
+inline int32_t cstl_queue_enqueue(cstl_queue_t *queue, cstl_data_t data) { return cstl_list_add_tail(queue, data); }
 
-inline void *cstl_queue_dequeue(cstl_queue_t *queue) { return cstl_list_pop_head(queue); }
+inline cstl_data_t cstl_queue_dequeue(cstl_queue_t *queue) { return cstl_list_pop_head(queue); }
 
-inline void *cstl_queue_peek(const cstl_queue_t *queue) { return cstl_list_peek_head(queue); }
+inline cstl_data_t cstl_queue_peek(const cstl_queue_t *queue) { return cstl_list_peek_head(queue); }
 
 inline size_t cstl_queue_get_num(const cstl_queue_t *queue) { return cstl_list_get_num(queue); }
 

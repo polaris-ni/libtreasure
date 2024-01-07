@@ -14,15 +14,12 @@ extern "C" {
 #endif
 
 #define CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(type, name)                 \
-    cstl_list_t *cstl_list_##name##_create(void);                       \
     int32_t cstl_list_##name##_add_head(cstl_list_t *list, type data);  \
     int32_t cstl_list_##name##_add_tail(cstl_list_t *list, type data);  \
     type cstl_list_##name##_pop_head(cstl_list_t *list);                \
     type cstl_list_##name##_pop_tail(cstl_list_t *list);                \
     type cstl_list_##name##_peek_head(const cstl_list_t *list);         \
-    type cstl_list_##name##_peek_tail(const cstl_list_t *list);         \
-    size_t cstl_list_##name##_get_num(const cstl_list_t *list);         \
-    void cstl_list_##name##_destroy(cstl_list_t *list);
+    type cstl_list_##name##_peek_tail(const cstl_list_t *list);
 
 CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(uint8_t, u8)
 
@@ -43,6 +40,7 @@ CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(int64_t, s64)
 #define CSTL_LIST_GET_NAME(data_type, suf) CSTL_GET_NAME(list, data_type, suf)
 
 #define cstl_list_create_ex() cstl_list_create(cstl_not_dup, cstl_not_free)
+#define cstl_list_get_num_ex() cstl_list_get_num()
 #define cstl_list_destroy_ex() cstl_list_destroy()
 #define cstl_list_add_head_ex(list, data) _Generic((data),      \
     uint8_t : CSTL_LIST_GET_NAME(u8, add_head)(list, data),     \

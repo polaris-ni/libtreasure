@@ -7,6 +7,7 @@
 #define LIBTREASURE_CSTL_DEFINES_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -20,18 +21,34 @@ enum {
     CSTL_MALLOC_ERROR
 };
 
-typedef void *(*cstl_dup_func)(void *);
+typedef union cstl_data {
+    uint8_t u8;
+    uint16_t u16;
+    uint32_t u32;
+    uint64_t u64;
+    int8_t s8;
+    int16_t s16;
+    int32_t s32;
+    int64_t s64;
+    float f32;
+    double f64;
+    void *data;
+} cstl_data_t;
 
-typedef void (*cstl_free_func)(void *);
+typedef bool (*cstl_dup_func)(const cstl_data_t *src, cstl_data_t *dest);
+
+typedef void (*cstl_free_func)(cstl_data_t *data);
 
 typedef struct cstl_dup_free {
     cstl_dup_func dup;
     cstl_free_func free;
 } cstl_func_pair;
 
+static const cstl_data_t CSTL_INVALID_DATA = {0};
+
 typedef struct cstl_node cstl_node_t;
 struct cstl_node {
-    void *data;
+    cstl_data_t data;
     cstl_node_t *prev;
     cstl_node_t *next;
 };

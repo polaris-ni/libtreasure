@@ -16,17 +16,19 @@ void *cstl_common_dup(void *data, size_t size) {
 }
 
 /* for string dup */
-void *cstl_string_dup(void *data) {
-    CSTL_RET_NULL_IF_NULL(data)
-    return cstl_common_dup(data, strlen((void *) data) + 1);
+bool cstl_string_dup(const cstl_data_t *src, cstl_data_t *dest) {
+    dest->data = cstl_common_dup(src->data, strlen((void *) src->data) + 1);
+    return dest->data != NULL;
 }
 
 /* just call free */
-void cstl_common_free(void *data) { free((void *) data); }
+void cstl_common_free(cstl_data_t *data) { free(data->data); }
 
-void *cstl_not_dup(void *data) { return data; }
+bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest) {
+    return memcpy(dest, src, sizeof(cstl_data_t)) == src;
+}
 
-void cstl_not_free(CSTL_UNUSED void *data) {}
+void cstl_not_free(CSTL_UNUSED cstl_data_t *data) {}
 
 #define CSTL_MURMURHASH_VC1 0xCC9E2D51
 #define CSTL_MURMURHASH_VC2 0x1B873593

@@ -16,27 +16,27 @@ typedef cstl_list_t cstl_stack_t;
 
 cstl_stack_t *cstl_stack_create(cstl_dup_func dup, cstl_free_func free);
 
-int32_t cstl_stack_push(cstl_stack_t *queue, void *data);
+int32_t cstl_stack_push(cstl_stack_t *stack, cstl_data_t data);
 
-void *cstl_stack_pop(cstl_stack_t *queue);
+cstl_data_t cstl_stack_pop(cstl_stack_t *stack);
 
-void *cstl_stack_peek(const cstl_stack_t *queue);
+cstl_data_t cstl_stack_peek(const cstl_stack_t *stack);
 
-size_t cstl_stack_get_num(const cstl_stack_t *queue);
+size_t cstl_stack_get_num(const cstl_stack_t *stack);
 
-void cstl_stack_destroy(cstl_stack_t *queue);
+void cstl_stack_destroy(cstl_stack_t *stack);
 
 inline cstl_stack_t *cstl_stack_create(cstl_dup_func dup, cstl_free_func free) { return cstl_list_create(dup, free); }
 
-inline int32_t cstl_stack_push(cstl_stack_t *queue, void *data) { return cstl_list_add_tail(queue, data); }
+inline int32_t cstl_stack_push(cstl_stack_t *stack, cstl_data_t data) { return cstl_list_add_tail(stack, data); }
 
-inline void *cstl_stack_pop(cstl_stack_t *queue) { return cstl_list_pop_tail(queue); }
+inline cstl_data_t cstl_stack_pop(cstl_stack_t *stack) { return cstl_list_pop_tail(stack); }
 
-inline void *cstl_stack_peek(const cstl_stack_t *queue) { return cstl_list_peek_tail(queue); }
+inline cstl_data_t cstl_stack_peek(const cstl_stack_t *stack) { return cstl_list_peek_tail(stack); }
 
-inline size_t cstl_stack_get_num(const cstl_stack_t *queue) { return cstl_list_get_num(queue); }
+inline size_t cstl_stack_get_num(const cstl_stack_t *stack) { return cstl_list_get_num(stack); }
 
-inline void cstl_stack_destroy(cstl_stack_t *queue) { return cstl_list_destroy(queue); }
+inline void cstl_stack_destroy(cstl_stack_t *stack) { return cstl_list_destroy(stack); }
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

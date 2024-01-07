@@ -17,17 +17,17 @@ typedef struct cstl_list cstl_list_t;
 
 cstl_list_t *cstl_list_create(cstl_dup_func dup, cstl_free_func free);
 
-int32_t cstl_list_add_head(cstl_list_t *list, void *data);
+int32_t cstl_list_add_head(cstl_list_t *list, cstl_data_t data);
 
-int32_t cstl_list_add_tail(cstl_list_t *list, void *data);
+int32_t cstl_list_add_tail(cstl_list_t *list, cstl_data_t data);
 
-void *cstl_list_pop_head(cstl_list_t *list);
+cstl_data_t cstl_list_pop_head(cstl_list_t *list);
 
-void *cstl_list_pop_tail(cstl_list_t *list);
+cstl_data_t cstl_list_pop_tail(cstl_list_t *list);
 
-void *cstl_list_peek_head(const cstl_list_t *list);
+cstl_data_t cstl_list_peek_head(const cstl_list_t *list);
 
-void *cstl_list_peek_tail(const cstl_list_t *list);
+cstl_data_t cstl_list_peek_tail(const cstl_list_t *list);
 
 size_t cstl_list_get_num(const cstl_list_t *list);
 

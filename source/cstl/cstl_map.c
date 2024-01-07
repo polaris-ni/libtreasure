@@ -151,13 +151,19 @@ int32_t cstl_hashmap_put(cstl_map_t *map, void *key, void *value) {
     CSTL_RET_IF_NULL(key, CSTL_BAD_PARAMS)
     CSTL_RET_IF_NULL(value, CSTL_BAD_PARAMS)
     resize(map);
-    void *tmp_key = map->key_func.dup(key);
-    CSTL_RET_IF_NULL(tmp_key, CSTL_MALLOC_ERROR)
-    void *tmp_value = map->value_func.dup(value);
-    if (tmp_value == NULL) {
+    cstl_data_t tmp_data = {.data = NULL};
+    cstl_data_t data = {.data = key};
+    if (!map->key_func.dup(&data, &tmp_data)) {
+        return CSTL_MALLOC_ERROR;
+    }
+    void *tmp_key = tmp_data.data;
+    tmp_data.data = NULL;
+    data.data = value;
+    if (!map->value_func.dup(&data, &tmp_data)) {
         map->key_func.free(tmp_key);
         return CSTL_MALLOC_ERROR;
     }
+    void *tmp_value = tmp_data.data;
     cstl_entry_t *entry = find_entry_by_key(map, true, tmp_key);
     if (entry == NULL) {
         map->key_func.free(tmp_key);

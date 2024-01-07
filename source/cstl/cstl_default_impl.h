@@ -16,16 +16,16 @@ extern "C" {
 void *cstl_common_dup(void *data, size_t size);
 
 /* for string dup */
-void *cstl_string_dup(void *data);
+bool cstl_string_dup(const cstl_data_t *src, cstl_data_t *dest);
 
 /* just call free */
-void cstl_common_free(void *data);
+void cstl_common_free(cstl_data_t *data);
 
 /* just return itself */
-void *cstl_not_dup(void *data);
+bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest);
 
 /* do nothing on free */
-void cstl_not_free(void *data);
+void cstl_not_free(cstl_data_t *data);
 
 /* murmurhash impl, as default hashmap hash func */
 uint64_t cstl_murmurhash(const void *data, size_t size);
