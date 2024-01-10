@@ -30,20 +30,20 @@ bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest) {
 
 void cstl_not_free(CSTL_UNUSED cstl_data_t *data) {}
 
-#define CSTL_MURMURHASH_VC1 0xCC9E2D51
-#define CSTL_MURMURHASH_VC2 0x1B873593
-#define CSTL_MURMURHASH_HC1 0xE6546B64
-#define CSTL_MURMURHASH_HC2 0x85EBCA6B
-#define CSTL_MURMURHASH_HC3 0xC2B2AE35
-#define CSTL_MURMURHASH_HC4 5
-#define CSTL_MURMURHASH_SEED 0x3B9ACA07 /* 1000000007 */
-#define CSTL_MURMURHASH_V_ROTATE 15
-#define CSTL_MURMURHASH_H_ROTATE 13
-#define CSTL_MURMURHASH_CHAR_FOR_PER_LOOP 4
-#define CSTL_MURMURHASH_SHIFT8 8
-#define CSTL_MURMURHASH_SHIFT13 13
-#define CSTL_MURMURHASH_SHIFT16 16
-#define CSTL_MURMURHASH_SHIFT24 24
+#define CSTL_MURMURHASH_VC1                 0xCC9E2D51
+#define CSTL_MURMURHASH_VC2                 0x1B873593
+#define CSTL_MURMURHASH_HC1                 0xE6546B64
+#define CSTL_MURMURHASH_HC2                 0x85EBCA6B
+#define CSTL_MURMURHASH_HC3                 0xC2B2AE35
+#define CSTL_MURMURHASH_HC4                 5
+#define CSTL_MURMURHASH_SEED                0x3B9ACA07 /* 1000000007 */
+#define CSTL_MURMURHASH_V_ROTATE            15
+#define CSTL_MURMURHASH_H_ROTATE            13
+#define CSTL_MURMURHASH_CHAR_FOR_PER_LOOP   4
+#define CSTL_MURMURHASH_SHIFT8              8
+#define CSTL_MURMURHASH_SHIFT13             13
+#define CSTL_MURMURHASH_SHIFT16             16
+#define CSTL_MURMURHASH_SHIFT24             24
 
 static size_t murmurhash_rotate(size_t v, uint32_t offset) {
     return ((v << offset) | (v >> (sizeof(size_t) * 8 - offset)));

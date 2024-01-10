@@ -114,6 +114,57 @@ cstl_data_t cstl_list_peek_tail(const cstl_list_t *list) {
     return list->tail->data;
 }
 
+int32_t cstl_list_insert(cstl_list_t *list, cstl_data_t data, size_t index) {
+    CSTL_RET_IF_NULL(list, CSTL_BAD_PARAMS)
+    if (index > list->num) {
+        return CSTL_BAD_PARAMS;
+    }
+    if (index == 0) {
+        return cstl_list_add_head(list, data);
+    }
+    if (index == list->num) {
+        return cstl_list_add_tail(list, data);
+    }
+    cstl_node_t *node = cstl_node_create(list, &data);
+    CSTL_RET_IF_NULL(node, CSTL_MALLOC_ERROR)
+    cstl_node_t *target = list->head;
+    for (size_t i =0; i < index; ++i) {
+        target = target->next;
+    }
+    cstl_node_t *last = target->prev;
+    node->prev = last;
+    node->next = target;
+    target->prev = node;
+    last->next = node;
+    return CSTL_SUCCESS;
+}
+
+int32_t cstl_list_remove(cstl_list_t *list, size_t index) {
+    CSTL_RET_IF_NULL(list, CSTL_BAD_PARAMS)
+    if (index >= list->num) {
+        return CSTL_ITEM_NOT_FOUND;
+    }
+    if (index == 0) {
+        (void) cstl_list_pop_head(list);
+        return CSTL_SUCCESS;
+    }
+    if (index == list->num - 1) {
+        (void) cstl_list_pop_tail(list);
+        return CSTL_SUCCESS;
+    }
+    cstl_node_t *target = list->head;
+    for (size_t i = 0; i < index; ++i) {
+        target = target->next;
+    }
+    cstl_node_t *last = target->prev;
+    last->next = target->next;
+    target->next->prev = last;
+    list->free(&target->data);
+    free(target);
+    list->num--;
+    return CSTL_SUCCESS;
+}
+
 size_t cstl_list_get_num(const cstl_list_t *list) {
     return list == NULL ? 0 : list->num;
 }

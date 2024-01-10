@@ -29,6 +29,10 @@ cstl_data_t cstl_list_peek_head(const cstl_list_t *list);
 
 cstl_data_t cstl_list_peek_tail(const cstl_list_t *list);
 
+int32_t cstl_list_insert(cstl_list_t *list, cstl_data_t data, size_t index);
+
+int32_t cstl_list_remove(cstl_list_t *list, size_t index);
+
 size_t cstl_list_get_num(const cstl_list_t *list);
 
 void cstl_list_destroy(cstl_list_t *list);
