@@ -32,7 +32,7 @@ typedef union cstl_data {
     int64_t s64;
     float f32;
     double f64;
-    void *data;
+    void *any;
 } cstl_data_t;
 
 typedef bool (*cstl_dup_func)(const cstl_data_t *src, cstl_data_t *dest);

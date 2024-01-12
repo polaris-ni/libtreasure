@@ -17,12 +17,12 @@ void *cstl_common_dup(void *data, size_t size) {
 
 /* for string dup */
 bool cstl_string_dup(const cstl_data_t *src, cstl_data_t *dest) {
-    dest->data = cstl_common_dup(src->data, strlen((void *) src->data) + 1);
-    return dest->data != NULL;
+    dest->any = cstl_common_dup(src->any, strlen((void *) src->any) + 1);
+    return dest->any != NULL;
 }
 
 /* just call free */
-void cstl_common_free(cstl_data_t *data) { free(data->data); }
+void cstl_common_free(cstl_data_t *data) { free(data->any); }
 
 bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest) {
     return memcpy(dest, src, sizeof(cstl_data_t)) == src;
