@@ -21,11 +21,15 @@ enum treasure_log_level {
     TREASURE_LOG_FETAL = 5,
 };
 
-#define TREASURE_LOGD(module, fmt...) treasure_log(TREASURE_LOG_DEBUG, module, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define TREASURE_LOGI(module, fmt...) treasure_log(TREASURE_LOG_INFO, module, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define TREASURE_LOGW(module, fmt...) treasure_log(TREASURE_LOG_WARN, module, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define TREASURE_LOGE(module, fmt...) treasure_log(TREASURE_LOG_ERROR, module, __FILE__, __LINE__, fmt, __VA_ARGS__)
-#define TREASURE_LOGF(module, fmt...) treasure_log(TREASURE_LOG_FETAL, module, __FILE__, __LINE__, fmt, __VA_ARGS__)
+#ifndef __FILE_NAME__
+#define __FILE_NAME__ __FILE__
+#endif
+
+#define TREASURE_LOGD(module, fmt, args...) treasure_log(TREASURE_LOG_DEBUG, module, __FILE_NAME__, __LINE__, fmt, ##args)
+#define TREASURE_LOGI(module, fmt, args...) treasure_log(TREASURE_LOG_INFO, module, __FILE_NAME__, __LINE__, fmt, ##args)
+#define TREASURE_LOGW(module, fmt, args...) treasure_log(TREASURE_LOG_WARN, module, __FILE_NAME__, __LINE__, fmt, ##args)
+#define TREASURE_LOGE(module, fmt, args...) treasure_log(TREASURE_LOG_ERROR, module, __FILE_NAME__, __LINE__, fmt, ##args)
+#define TREASURE_LOGF(module, fmt, args...) treasure_log(TREASURE_LOG_FETAL, module, __FILE_NAME__, __LINE__, fmt, ##args)
 
 void treasure_log(int32_t level, const char *module, const char *filename,
                   uint32_t line, const char *fmt, ...);
