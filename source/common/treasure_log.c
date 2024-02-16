@@ -8,15 +8,15 @@
 #include <stdarg.h>
 
 #ifndef TREASURE_LOG_LINE_MAX_LEN
-#define TREASURE_LOG_LINE_MAX_LEN 128
+#define TREASURE_LOG_LINE_MAX_LEN 256
 #endif
 
 #ifndef TREASURE_LOG_MIN_LEVEL
 #define TREASURE_LOG_MIN_LEVEL TREASURE_LOG_INFO
 #endif
 
-void treasure_log(int32_t level, const char *module, const char *filename,
-                  uint32_t line, const char *fmt, ...) {
+__attribute__((weak)) void treasure_log(int32_t level, const char *module, const char *filename, uint32_t line,
+                                        const char *fmt, ...) {
     if (level < TREASURE_LOG_MIN_LEVEL) {
         return;
     }

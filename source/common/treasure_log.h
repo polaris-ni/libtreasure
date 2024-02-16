@@ -12,14 +12,12 @@
 extern "C" {
 #endif
 
-enum treasure_log_level {
-    TREASURE_LOG_CLOSE = 0,
-    TREASURE_LOG_DEBUG = 1,
-    TREASURE_LOG_INFO = 2,
-    TREASURE_LOG_WARN = 3,
-    TREASURE_LOG_ERROR = 4,
-    TREASURE_LOG_FETAL = 5,
-};
+#define TREASURE_LOG_CLOSE INT32_MAX
+#define TREASURE_LOG_DEBUG 1
+#define TREASURE_LOG_INFO 2
+#define TREASURE_LOG_WARN 3
+#define TREASURE_LOG_ERROR 4
+#define TREASURE_LOG_FETAL 5
 
 #ifndef __FILE_NAME__
 #define __FILE_NAME__ __FILE__
