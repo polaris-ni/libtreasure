@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "treasure_log.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -53,14 +54,28 @@ struct cstl_node {
     cstl_node_t *next;
 };
 
-#define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret)     \
-    if (ptr == NULL || ptr->num == 0) {         \
-        return ret;                             \
+#define CSTL_MODULE_NAME "cstl"
+
+#define CSTL_LOGD(fmt, args...) TREASURE_LOGD(CSTL_MODULE_NAME, fmt, ##args)
+#define CSTL_LOGI(fmt, args...) TREASURE_LOGI(CSTL_MODULE_NAME, fmt, ##args)
+#define CSTL_LOGW(fmt, args...) TREASURE_LOGW(CSTL_MODULE_NAME, fmt, ##args)
+#define CSTL_LOGE(fmt, args...) TREASURE_LOGE(CSTL_MODULE_NAME, fmt, ##args)
+#define CSTL_LOGF(fmt, args...) TREASURE_LOGF(CSTL_MODULE_NAME, fmt, ##args)
+
+#define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret) \
+    if (ptr == NULL) {                      \
+        CSTL_LOGE(#ptr " is null.");        \
+        return ret;                         \
+    }                                       \
+    if (ptr->num == 0) {                    \
+        CSTL_LOGW(#ptr " is empty.");       \
+        return ret;                         \
     }
 
-#define CSTL_RET_IF_NULL(ptr, ret)  \
-    if (ptr == NULL) {              \
-        return ret;                 \
+#define CSTL_RET_IF_NULL(ptr, ret)      \
+    if (ptr == NULL) {                  \
+        CSTL_LOGE(#ptr " is null.");    \
+        return ret;                     \
     }
 
 #define CSTL_RET_NULL_IF_NULL(ptr) CSTL_RET_IF_NULL(ptr, NULL)
