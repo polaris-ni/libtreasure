@@ -41,9 +41,9 @@ static cstl_node_t *cstl_node_create(cstl_list_t *list, const cstl_data_t *data)
 }
 
 int32_t cstl_list_add_head(cstl_list_t *list, cstl_data_t data) {
-    CSTL_RET_IF_NULL(list, CSTL_ERROR);
+    CSTL_RET_IF_NULL(list, EINVAL);
     cstl_node_t *node = cstl_node_create(list, &data);
-    CSTL_RET_IF_NULL(node, CSTL_ERROR);
+    CSTL_RET_IF_NULL(node, ENOMEM);
     if (list->num == 0) {
         list->head = node;
         list->tail = node;
@@ -53,13 +53,13 @@ int32_t cstl_list_add_head(cstl_list_t *list, cstl_data_t data) {
         list->head = node;
     }
     list->num++;
-    return CSTL_SUCCESS;
+    return EOK;
 }
 
 int32_t cstl_list_add_tail(cstl_list_t *list, cstl_data_t data) {
-    CSTL_RET_IF_NULL(list, CSTL_ERROR);
+    CSTL_RET_IF_NULL(list, EINVAL);
     cstl_node_t *node = cstl_node_create(list, &data);
-    CSTL_RET_IF_NULL(node, CSTL_ERROR);
+    CSTL_RET_IF_NULL(node, ENOMEM);
     if (list->num == 0) {
         list->head = node;
         list->tail = node;
@@ -69,7 +69,7 @@ int32_t cstl_list_add_tail(cstl_list_t *list, cstl_data_t data) {
         list->tail = node;
     }
     list->num++;
-    return CSTL_SUCCESS;
+    return EOK;
 }
 
 cstl_data_t cstl_list_pop_head(cstl_list_t *list) {
@@ -115,9 +115,9 @@ cstl_data_t cstl_list_peek_tail(const cstl_list_t *list) {
 }
 
 int32_t cstl_list_insert(cstl_list_t *list, cstl_data_t data, size_t index) {
-    CSTL_RET_IF_NULL(list, CSTL_BAD_PARAMS)
+    CSTL_RET_IF_NULL(list, EINVAL)
     if (index > list->num) {
-        return CSTL_BAD_PARAMS;
+        return EINVAL;
     }
     if (index == 0) {
         return cstl_list_add_head(list, data);
@@ -126,7 +126,7 @@ int32_t cstl_list_insert(cstl_list_t *list, cstl_data_t data, size_t index) {
         return cstl_list_add_tail(list, data);
     }
     cstl_node_t *node = cstl_node_create(list, &data);
-    CSTL_RET_IF_NULL(node, CSTL_MALLOC_ERROR)
+    CSTL_RET_IF_NULL(node, ENOMEM)
     cstl_node_t *target = list->head;
     for (size_t i =0; i < index; ++i) {
         target = target->next;
@@ -136,21 +136,21 @@ int32_t cstl_list_insert(cstl_list_t *list, cstl_data_t data, size_t index) {
     node->next = target;
     target->prev = node;
     last->next = node;
-    return CSTL_SUCCESS;
+    return EOK;
 }
 
 int32_t cstl_list_remove(cstl_list_t *list, size_t index) {
-    CSTL_RET_IF_NULL(list, CSTL_BAD_PARAMS)
+    CSTL_RET_IF_NULL(list, EINVAL)
     if (index >= list->num) {
-        return CSTL_ITEM_NOT_FOUND;
+        return ENOENT;
     }
     if (index == 0) {
         (void) cstl_list_pop_head(list);
-        return CSTL_SUCCESS;
+        return EOK;
     }
     if (index == list->num - 1) {
         (void) cstl_list_pop_tail(list);
-        return CSTL_SUCCESS;
+        return EOK;
     }
     cstl_node_t *target = list->head;
     for (size_t i = 0; i < index; ++i) {
@@ -162,7 +162,7 @@ int32_t cstl_list_remove(cstl_list_t *list, size_t index) {
     list->free(&target->data);
     free(target);
     list->num--;
-    return CSTL_SUCCESS;
+    return EOK;
 }
 
 size_t cstl_list_get_num(const cstl_list_t *list) {

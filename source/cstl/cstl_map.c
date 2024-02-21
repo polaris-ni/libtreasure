@@ -147,33 +147,33 @@ static void resize(cstl_map_t *map) {
 }
 
 int32_t cstl_hashmap_put(cstl_map_t *map, void *key, void *value) {
-    CSTL_RET_IF_NULL(map, CSTL_BAD_PARAMS)
-    CSTL_RET_IF_NULL(key, CSTL_BAD_PARAMS)
-    CSTL_RET_IF_NULL(value, CSTL_BAD_PARAMS)
+    CSTL_RET_IF_NULL(map, EINVAL)
+    CSTL_RET_IF_NULL(key, EINVAL)
+    CSTL_RET_IF_NULL(value, EINVAL)
     resize(map);
     cstl_data_t tmp_data = {.any = NULL};
     cstl_data_t data = {.any = key};
     if (!map->key_func.dup(&data, &tmp_data)) {
-        return CSTL_MALLOC_ERROR;
+        return ENOMEM;
     }
     void *tmp_key = tmp_data.any;
     tmp_data.any = NULL;
     data.any = value;
     if (!map->value_func.dup(&data, &tmp_data)) {
         map->key_func.free(tmp_key);
-        return CSTL_MALLOC_ERROR;
+        return ENOMEM;
     }
     void *tmp_value = tmp_data.any;
     cstl_entry_t *entry = find_entry_by_key(map, true, tmp_key);
     if (entry == NULL) {
         map->key_func.free(tmp_key);
         map->value_func.free(tmp_value);
-        return CSTL_ERROR;
+        return EINVAL;
     }
     entry->key = tmp_key;
     entry->value = tmp_value;
     map->num++;
-    return CSTL_SUCCESS;
+    return EOK;
 }
 
 void *cstl_hashmap_get(cstl_map_t *map, void *key) {
@@ -185,8 +185,8 @@ void *cstl_hashmap_get(cstl_map_t *map, void *key) {
 }
 
 int32_t cstl_hashmap_remove(cstl_map_t *map, void *key) {
-    CSTL_RET_IF_NULL(map, CSTL_BAD_PARAMS)
-    CSTL_RET_IF_NULL(key, CSTL_BAD_PARAMS)
+    CSTL_RET_IF_NULL(map, EINVAL)
+    CSTL_RET_IF_NULL(key, EINVAL)
     uint64_t index = map->hash(key, map->key_size(key)) % map->capacity;
     cstl_entry_t *current = &map->entries[index];
     cstl_entry_t *last = NULL;
@@ -197,24 +197,24 @@ int32_t cstl_hashmap_remove(cstl_map_t *map, void *key) {
         last = current;
         current = current->next;
     }
-    CSTL_RET_IF_NULL(current, CSTL_ITEM_NOT_FOUND)
+    CSTL_RET_IF_NULL(current, ENOENT)
     map->num--;
     map->key_func.free(current->key);
     map->value_func.free(current->value);
     if (last == NULL) {
         if (current->next == NULL) {
-            return CSTL_SUCCESS;
+            return EOK;
         }
         cstl_entry_t *next = current->next;
         current->key = next->key;
         current->value = next->value;
         current->next = next->next;
         free(next);
-        return CSTL_SUCCESS;
+        return EOK;
     } else {
         last->next = current->next;
         free(current);
-        return CSTL_SUCCESS;
+        return EOK;
     }
 }
 

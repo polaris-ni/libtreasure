@@ -6,6 +6,7 @@
 #ifndef LIBTREASURE_CSTL_DEFINES_H
 #define LIBTREASURE_CSTL_DEFINES_H
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "treasure_log.h"
@@ -14,13 +15,17 @@
 extern "C" {
 #endif
 
-enum {
-    CSTL_SUCCESS,
-    CSTL_ERROR,
-    CSTL_BAD_PARAMS,
-    CSTL_ITEM_NOT_FOUND,
-    CSTL_MALLOC_ERROR
-};
+#ifndef EOK
+#define EOK 0
+#endif
+
+//enum {
+//    CSTL_SUCCESS,
+//    CSTL_ERROR,
+//    CSTL_BAD_PARAMS,
+//    CSTL_ITEM_NOT_FOUND,
+//    CSTL_MALLOC_ERROR
+//};
 
 typedef union cstl_data {
     uint8_t u8;
@@ -64,16 +69,19 @@ struct cstl_node {
 
 #define CSTL_RET_IF_NULL_OR_EMPTY(ptr, ret) \
     if (ptr == NULL) {                      \
+        errno = ENOENT;                     \
         CSTL_LOGE(#ptr " is null.");        \
         return ret;                         \
     }                                       \
     if (ptr->num == 0) {                    \
+        errno = ENOENT;                     \
         CSTL_LOGW(#ptr " is empty.");       \
         return ret;                         \
     }
 
 #define CSTL_RET_IF_NULL(ptr, ret)      \
     if (ptr == NULL) {                  \
+        errno = ENOENT;                 \
         CSTL_LOGE(#ptr " is null.");    \
         return ret;                     \
     }
