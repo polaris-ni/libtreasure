@@ -85,6 +85,7 @@ cstl_data_t cstl_list_pop_head(cstl_list_t *list) {
     }
     cstl_data_t data = node->data;
     free(node);
+    errno = 0;
     return data;
 }
 
@@ -101,16 +102,19 @@ cstl_data_t cstl_list_pop_tail(cstl_list_t *list) {
     }
     cstl_data_t data = node->data;
     free(node);
+    errno = 0;
     return data;
 }
 
 cstl_data_t cstl_list_peek_head(const cstl_list_t *list) {
     CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
+    errno = 0;
     return list->head->data;
 }
 
 cstl_data_t cstl_list_peek_tail(const cstl_list_t *list) {
     CSTL_RET_IF_NULL_OR_EMPTY(list, CSTL_INVALID_DATA);
+    errno = 0;
     return list->tail->data;
 }
 

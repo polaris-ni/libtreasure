@@ -17,26 +17,6 @@
         return cstl_list_add_tail(list, temp);                          \
     }
 
-#define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_POP_HEAD(type, name)           \
-    type cstl_list_##name##_pop_head(cstl_list_t *list) {               \
-        return cstl_list_pop_head(list).name;                           \
-    }
-
-#define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_POP_TAIL(type, name)           \
-    type cstl_list_##name##_pop_tail(cstl_list_t *list) {               \
-        return cstl_list_pop_tail(list).name;                           \
-    }
-
-#define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_PEEK_HEAD(type, name)          \
-    type cstl_list_##name##_peek_head(const cstl_list_t *list) {        \
-        return cstl_list_peek_head(list).name;                          \
-    }
-
-#define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_PEEK_TAIL(type, name)          \
-    type cstl_list_##name##_peek_tail(const cstl_list_t *list) {        \
-        return cstl_list_peek_tail(list).name;                          \
-    }
-
 #define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_INSERT(type, name)                         \
     int32_t cstl_list_##name##insert(cstl_list_t *list, type data, size_t index) {  \
         cstl_data_t temp = { .name = data };                                        \
@@ -46,10 +26,6 @@
 #define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNCS(type, name)                   \
     CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_ADD_HEAD(type, name)               \
     CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_ADD_TAIL(type, name)               \
-    CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_POP_HEAD(type, name)               \
-    CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_POP_TAIL(type, name)               \
-    CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_PEEK_HEAD(type, name)              \
-    CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_PEEK_TAIL(type, name)              \
     CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_INSERT(type, name)
 
 CSTL_LIST_IMPL_BASE_TYPE_EX_FUNCS(uint8_t, u8)
