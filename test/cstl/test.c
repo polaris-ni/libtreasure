@@ -4,6 +4,8 @@
  */
 #include <stdio.h>
 #include <string.h>
+#include <assert.h>
+#include "cstl_list_ex.h"
 #include "cstl_queue.h"
 #include "cstl_stack.h"
 #include "cstl_default_impl.h"
@@ -13,8 +15,30 @@ static void str_cmp(char *str, char *exp) {
            str, exp);
 }
 
+#define int_cmp(src, exp) \
+    printf("[%s] expect: %d current: %d\n", (src == exp) ? "PASS" : "FAIL", src, exp);
+
+
 static void size_cmp(size_t item, size_t exp) {
     printf("[%s] expect: %zu current: %zu\n", (item == exp) ? "PASS" : "FAIL", item, exp);
+}
+
+void list_test(void) {
+    cstl_list_t *list = cstl_list_create_ex();
+    CSTL_RET_IF_NULL(list,)
+    uint8_t x = 1;
+    cstl_list_add_head_ex(list, x);
+    x++;
+    cstl_list_add_head_ex(list, x);
+    x++;
+    cstl_list_add_tail_ex(list, x);
+    /* 2 1 3 */
+    assert(3 == cstl_list_peek_tail(list).u8);
+    assert(2 == cstl_list_peek_head(list).u8);
+    assert(2 == cstl_list_pop_head_ex(list).u8);
+    assert(3 == cstl_list_pop_tail_ex(list).u8);
+    assert(1 == cstl_list_pop_tail_ex(list).u8);
+    cstl_list_destroy_ex(list);
 }
 
 void queue_test(void) {

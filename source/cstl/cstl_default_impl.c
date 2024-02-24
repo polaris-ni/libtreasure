@@ -25,7 +25,7 @@ bool cstl_string_dup(const cstl_data_t *src, cstl_data_t *dest) {
 void cstl_common_free(cstl_data_t *data) { free(data->any); }
 
 bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest) {
-    return memcpy(dest, src, sizeof(cstl_data_t)) == src;
+    return memcpy(dest, src, sizeof(cstl_data_t)) == dest;
 }
 
 void cstl_not_free(CSTL_UNUSED cstl_data_t *data) {}

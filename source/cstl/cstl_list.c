@@ -32,6 +32,7 @@ static cstl_node_t *cstl_node_create(cstl_list_t *list, const cstl_data_t *data)
     cstl_node_t *node = (cstl_node_t *) malloc(sizeof(cstl_node_t));
     CSTL_RET_NULL_IF_NULL(node);
     if (!list->dup(data, &node->data)) {
+        CSTL_LOGE("dup node failed.");
         free(node);
         return NULL;
     }

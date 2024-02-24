@@ -16,7 +16,7 @@ extern "C" {
 #define CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(type, name)                           \
     int32_t cstl_list_##name##_add_head(cstl_list_t *list, type data);            \
     int32_t cstl_list_##name##_add_tail(cstl_list_t *list, type data);            \
-    int32_t cstl_list_##name##insert(cstl_list_t *list, type data, size_t index);
+    int32_t cstl_list_##name##_insert(cstl_list_t *list, type data, size_t index);
 
 CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(uint8_t, u8)
 CSTL_DECLARE_BASE_TYPE_LIST_EX_FUNC(uint16_t, u16)

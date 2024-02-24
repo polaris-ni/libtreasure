@@ -18,7 +18,7 @@
     }
 
 #define CSTL_LIST_IMPL_BASE_TYPE_EX_FUNC_INSERT(type, name)                         \
-    int32_t cstl_list_##name##insert(cstl_list_t *list, type data, size_t index) {  \
+    int32_t cstl_list_##name##_insert(cstl_list_t *list, type data, size_t index) {  \
         cstl_data_t temp = { .name = data };                                        \
         return cstl_list_insert(list, temp, index);                                 \
     }
