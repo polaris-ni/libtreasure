@@ -10,12 +10,16 @@
 extern "C" {
 #endif
 
-#ifdef UNUSED
+#ifndef UNUSED
 #define UNUSED __attribute__((unused))
 #endif
 
-#ifdef WEAK_FUNC
+#ifndef WEAK_FUNC
 #define WEAK_FUNC __attribute__((weak))
+#endif
+
+#ifndef EOK
+#define EOK 0
 #endif
 
 #if defined(__cplusplus) || defined(c_plusplus)
