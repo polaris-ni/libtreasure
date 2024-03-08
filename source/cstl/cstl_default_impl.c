@@ -28,7 +28,7 @@ bool cstl_not_dup(const cstl_data_t *src, cstl_data_t *dest) {
     return memcpy(dest, src, sizeof(cstl_data_t)) == dest;
 }
 
-void cstl_not_free(CSTL_UNUSED cstl_data_t *data) {}
+void cstl_not_free(UNUSED cstl_data_t *data) {}
 
 #define CSTL_MURMURHASH_VC1                 0xCC9E2D51
 #define CSTL_MURMURHASH_VC2                 0x1B873593

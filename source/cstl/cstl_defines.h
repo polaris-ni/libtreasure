@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "treasure_log.h"
+#include "treasure_defines.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -87,8 +88,6 @@ struct cstl_node {
     }
 
 #define CSTL_RET_NULL_IF_NULL(ptr) CSTL_RET_IF_NULL(ptr, NULL)
-
-#define CSTL_UNUSED __attribute__((unused))
 
 #define CSTL_GET_NAME(cstl_type, data_type, suf) cstl_##cstl_type##_##data_type##_##suf
 
