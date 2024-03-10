@@ -8,41 +8,11 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "tr_thread_pool_common.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
-
-/**
-* @param TASK_CANCEL_DISABLE task can not be cancelled
-* @param TASK_CANCEL_LAZY task will be cancelled at the appropriate time
-* @param TASK_CANCEL_PROMPT task will be cancelled intermediately
-*/
-typedef enum tr_task_cancel_type {
-    TASK_CANCEL_DISABLE,
-    TASK_CANCEL_LAZY,
-    TASK_CANCEL_PROMPT
-} task_cancel_type;
-
-/**
- * work function, which will be called when task is executed
- */
-typedef void *(*task_worker)(void *);
-
-/**
- * free function will only be called to free the #args when the task is cancelled
- */
-typedef void (*task_free)(void *args);
-
-/**
- * identifier of task, unique in one task queue, maybe the same as one task in another queue
- */
-typedef size_t task_id_t;
-
-/**
- * all task ids should be bigger than 0, which means task id is invalid
- */
-#define INVALID_TASK_ID 0u
 
 typedef struct tr_task task_t;
 

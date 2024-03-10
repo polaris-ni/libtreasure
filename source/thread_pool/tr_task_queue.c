@@ -7,7 +7,6 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "treasure_defines.h"
-#include "tr_thread_pool_common.h"
 
 /**
  * @param type #task_type
