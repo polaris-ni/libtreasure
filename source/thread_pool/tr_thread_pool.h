@@ -7,20 +7,27 @@
 #define LIBTREASURE_TR_THREAD_POOL_H
 
 #include <stdint.h>
+#include "tr_thread_pool_common.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
 #endif
 
+/**
+ * thread pool won't limit the num of threads
+ * if there is no free thread, pool will always create a new thread regardless of current active threads num
+ */
+#define TR_AUTO_THREADS (-1)
+
 typedef struct thread_pool thread_pool_t;
 
 /**
 * create a thread pool
-* @param core_thread_num the num of core thread [non-negative]
-* @param max_thread_num the max num of threads in thread pool [positive]
-* @return pointer to #thread_pool_t, null if failed
+* @param core_thread_num the num of core thread, it should be 0 or bigger than 0
+* @param max_thread_num the max num of threads in thread pool, it should be bigger than 0 or #TR_AUTO_THREADS
+* @return pointer to #thread_pool_t, null if failed, errors will be set to errno
 */
-thread_pool_t *thread_pool_create(int32_t core_thread_num, int32_t max_thread_num);
+thread_pool_t *thread_pool_create(uint32_t core_thread_num, int32_t max_thread_num);
 
 /**
  * wait until thread pool is destroyed
@@ -37,12 +44,12 @@ void thread_pool_destroy(thread_pool_t *pool);
 /**
  * add a task to thread pool
  * @param pool pointer to a created thread_pool_t
- * @param attr attribute of the task, it will be copied, and you can free it after #thread_pool_add_task
- * @param func work func, posix style
+ * @param id return the id of task if success, ignore if id is NULL
+ * @param worker work function
  * @param args params for #task_worker
- * @return #result_code
+ * @return errno[TBD]
  */
-int32_t thread_pool_add_task(thread_pool_t *pool, const task_attr_t *attr, work_func_posix *func, void *args);
+int32_t thread_pool_add_task(thread_pool_t *pool, task_id_t *id, task_worker *worker, void *args);
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }
