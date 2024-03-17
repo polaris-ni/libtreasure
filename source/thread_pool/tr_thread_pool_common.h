@@ -7,6 +7,7 @@
 #define LIBTREASURE_TR_THREAD_POOL_COMMON_H
 
 #include "treasure_log.h"
+#include "treasure_defines.h"
 
 #if defined(__cplusplus) || defined(c_plusplus)
 extern "C" {
@@ -34,14 +35,26 @@ typedef void *(*task_worker)(void *);
 typedef void (*task_free)(void *args);
 
 /**
- * identifier of task, unique in one task queue, maybe the same as one task in another queue
+ * identifier of task, unique in one task queue, maybe the same as a task in another queue
  */
 typedef size_t task_id_t;
 
 /**
- * all task ids should be bigger than 0, which means task id is invalid
+ * identifier of thread, unique in one thread pool, maybe the same as a thread in another thread pool
  */
+typedef size_t thread_uid_t;
+
+typedef struct thread_pool thread_pool_t;
+
+/**
+ * thread pool won't limit the num of threads
+ * if there is no free thread, pool will always create a new thread regardless of current active threads num
+ */
+#define TR_AUTO_THREADS (-1)
+
 #define INVALID_TASK_ID 0u
+
+#define INVALID_THREAD_ID 0u
 
 #define TR_TP_MODULE_NAME "tr_thread_pool"
 
@@ -51,24 +64,18 @@ typedef size_t task_id_t;
 #define TR_TP_LOGE(fmt, args...) TREASURE_LOGE(TR_TP_MODULE_NAME, fmt, ##args)
 #define TR_TP_LOGF(fmt, args...) TREASURE_LOGF(TR_TP_MODULE_NAME, fmt, ##args)
 
-#ifndef TR_TP_RET_SET_IF
 #define TR_TP_RET_SET_IF(cond, err, msg, ret)   \
     if (cond) {                                 \
         errno = err;                            \
         TR_TP_LOGE(msg);                        \
         return ret;                             \
     }
-#endif
 
-#ifndef TR_TP_RET_IF_NULL
 #define TR_TP_RET_IF_NULL(ptr, ret)     \
     if (ptr == NULL) {                  \
         TR_TP_LOGE(#ptr " is NULL.");   \
         return ret;                     \
     }
-#endif
-
-
 
 #if defined(__cplusplus) || defined(c_plusplus)
 }

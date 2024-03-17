@@ -14,14 +14,6 @@ extern "C" {
 #endif
 
 /**
- * thread pool won't limit the num of threads
- * if there is no free thread, pool will always create a new thread regardless of current active threads num
- */
-#define TR_AUTO_THREADS (-1)
-
-typedef struct thread_pool thread_pool_t;
-
-/**
 * create a thread pool
 * @param core_thread_num the num of core thread, it should be 0 or bigger than 0
 * @param max_thread_num the max num of threads in thread pool, it should be bigger than 0 or #TR_AUTO_THREADS
@@ -40,6 +32,13 @@ void thread_pool_wait(thread_pool_t *pool);
  * @param pool the pool to be destroy [nullable]
  */
 void thread_pool_destroy(thread_pool_t *pool);
+
+/**
+ * generate a new thread id
+ * @param pool pool to generate thread id
+ * @return a new thread_uid_t, #INVALID_THREAD_ID(0) will be returned if pool is NULL or thread id exceeds max
+ */
+thread_uid_t thread_pool_gen_thread_id(thread_pool_t *pool);
 
 /**
  * add a task to thread pool

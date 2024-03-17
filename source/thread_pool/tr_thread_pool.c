@@ -10,26 +10,8 @@
 #include <memory.h>
 #include <errno.h>
 #include <pthread.h>
+#include "tr_thread.h"
 #include "tr_task_queue.h"
-#include "treasure_defines.h"
-
-typedef size_t thread_uid_t;
-
-typedef enum {
-    STATE_INVALID,
-    STATE_IDLE,
-    STATE_WORKING
-} thread_state;
-
-typedef struct tr_thread {
-    thread_uid_t id;
-    thread_state state;
-    pthread_t pthread;
-    task_t *task;
-    thread_pool_t *pool;
-    sem_t sem;
-    pthread_mutex_t lock;
-} thread_t;
 
 typedef struct thread_node thread_node_t;
 struct thread_node {
@@ -169,4 +151,14 @@ thread_pool_t *thread_pool_create(uint32_t core_thread_num, int32_t max_thread_n
         temp = NULL;
     }
     return NULL;
+}
+
+thread_uid_t thread_pool_gen_thread_id(thread_pool_t *pool)
+{
+    TR_TP_RET_IF_NULL(pool, INVALID_THREAD_ID);
+    (void) pthread_mutex_lock(&pool->lock);
+    pool->id++;
+    thread_uid_t id = pool->id;
+    (void) pthread_mutex_unlock(&pool->lock);
+    return id;
 }
